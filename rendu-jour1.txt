@@ -1,0 +1,195 @@
+TP VulnShop – Jour 1 (Après-midi)
+Nom : Kevin Junior Kouomeugne Polla
+
+=========================================
+Exercice 1 – Injection SQL (Bypass Login)
+=========================================
+
+Q1.1
+La requête SQL exécutée est :
+
+SELECT * FROM users WHERE email = 'admin@vulnshop.test' --' AND password = 'nimportequoi'
+
+Le symbole "--" met le reste de la requête en commentaire. La vérification du mot de passe est ignorée, ce qui permet de se connecter sans connaître le mot de passe.
+
+Q1.2
+Avec le payload OR 1=1, la condition devient toujours vraie. La requête renvoie tous les utilisateurs et l'application connecte le premier utilisateur retourné par la base.
+
+=========================================
+Exercice 2 – Injection SQL UNION
+=========================================
+
+Q2.1
+Les champs "nom" contiennent les emails des utilisateurs et les champs "prix" contiennent leurs mots de passe.
+
+Exemple :
+- alice@vulnshop.test → azerty123
+- bob@vulnshop.test → motdepasse
+- admin@vulnshop.test → admin
+
+Ces données proviennent de la table users.
+
+Q2.2
+Le UNION SELECT doit contenir le même nombre de colonnes que la requête originale.
+
+Requête originale :
+SELECT id, nom, prix FROM produits
+
+Trois colonnes sont donc nécessaires dans le UNION :
+SELECT id, email, password FROM users
+
+=========================================
+Exercice 4 – XSS Réfléchi
+=========================================
+
+Q4.1
+Une alerte JavaScript apparaît dans le navigateur.
+
+Le paramètre q de l'URL est interprété comme du HTML puis exécuté.
+
+Différence avec le XSS stocké :
+- XSS réfléchi : le code malveillant est dans l'URL et nécessite un clic de la victime.
+- XSS stocké : le code malveillant est enregistré dans la base de données et touche tous les visiteurs.
+
+React protège normalement contre ce type d'attaque avec l'échappement automatique des données affichées avec {q}. L'utilisation de dangerouslySetInnerHTML désactive cette protection.
+
+=========================================
+Exercice 5 – IDOR
+=========================================
+
+Q5.1
+La route renvoie les commandes sans vérifier l'identité de l'utilisateur.
+
+Il est possible d'accéder aux commandes 1, 2 et 3 sans authentification.
+
+Q5.2
+Il s'agit d'une escalade horizontale.
+
+L'utilisateur accède aux données d'autres utilisateurs sans obtenir de privilèges administrateur.
+
+=========================================
+Conclusion
+=========================================
+
+Les vulnérabilités exploitées :
+
+- Injection SQL (bypass d'authentification)
+- Injection SQL UNION (exfiltration de données)
+- XSS réfléchi
+- IDOR
+
+Ces failles résultent principalement :
+- d'un manque de validation des entrées ;
+- du mélange entre données utilisateur et code SQL ;
+- de l'absence de contrôle d'accès côté serveur.
+
+
+
+
+=========================================
+Exercice 3 – XSS Stocké
+=========================================
+
+Q3.1
+Une alerte JavaScript apparaît automatiquement lors de l'ouverture de la page /commentaires.
+
+Le commentaire contient le code :
+
+<img src=x onerror="alert('XSS stocké')">
+
+Lorsque l'image ne peut pas être chargée, l'événement onerror exécute le code JavaScript.
+
+Q3.2
+Il s'agit d'un XSS stocké car le code malveillant est enregistré dans les données de l'application (tableau comments).
+
+Chaque utilisateur visitant la page exécute automatiquement le script injecté.
+
+Contrairement au XSS réfléchi, la victime n'a pas besoin d'ouvrir un lien spécialement construit.
+
+Q3.3
+La vulnérabilité est causée par :
+
+<span dangerouslySetInnerHTML={{ __html: c.html }} />
+
+Cette instruction demande à React d'interpréter le contenu comme du HTML.
+
+Une version plus sûre serait :
+
+<span>{c.html}</span>
+
+Dans ce cas React échappe automatiquement les caractères dangereux et affiche le contenu comme du texte.
+
+=========================================
+Comparaison XSS Réfléchi / XSS Stocké
+=========================================
+
+XSS réfléchi :
+- Le payload est contenu dans l'URL.
+- Nécessite l'ouverture d'un lien piégé.
+- Impact limité aux victimes ciblées.
+
+XSS stocké :
+- Le payload est enregistré dans l'application.
+- S'exécute automatiquement pour tous les visiteurs.
+- Impact généralement plus important.
+
+
+=========================================
+Exercice 6 – CSRF
+=========================================
+
+Q6.1
+
+La route /api/profil permet de modifier l'adresse e-mail du profil sans vérifier l'origine de la requête.
+
+Une requête POST suffit pour modifier les données :
+
+POST /api/profil
+
+{
+  "email": "pirate@evil.test"
+}
+
+Q6.2
+
+La vulnérabilité est une attaque CSRF (Cross-Site Request Forgery).
+
+Un attaquant peut amener un utilisateur connecté à exécuter une action à son insu depuis un autre site web.
+
+Causes :
+
+- absence de jeton CSRF ;
+- absence de vérification de l'en-tête Origin ;
+- absence de vérification du Referer ;
+- absence de protection spécifique contre les requêtes inter-sites.
+
+Impact :
+
+- modification non autorisée des données utilisateur ;
+- changement d'adresse e-mail ;
+- modification de profil ;
+- exécution d'actions à l'insu de la victime.
+
+
+Conclusion
+
+Ce TP a permis d'exploiter plusieurs vulnérabilités présentes dans une application Next.js volontairement vulnérable.
+
+Les failles observées sont :
+
+- Injection SQL par concaténation de chaînes ;
+- Exfiltration de données via UNION SELECT ;
+- XSS réfléchi ;
+- XSS stocké ;
+- IDOR (Insecure Direct Object Reference) ;
+- CSRF (Cross-Site Request Forgery).
+
+Les causes principales sont :
+
+- absence de validation des entrées ;
+- absence de requêtes préparées ;
+- utilisation dangereuse de dangerouslySetInnerHTML ;
+- absence de contrôle d'accès ;
+- absence de mécanismes anti-CSRF.
+
+Ces vulnérabilités peuvent entraîner un accès non autorisé aux données, une exécution de code JavaScript dans le navigateur et une compromission de comptes utilisateurs.
