@@ -1,0 +1,7 @@
+rules:
+  - id: test-select
+    languages:
+      - typescript
+    severity: ERROR
+    message: SELECT trouvé
+    pattern-regex: 'SELECT'
