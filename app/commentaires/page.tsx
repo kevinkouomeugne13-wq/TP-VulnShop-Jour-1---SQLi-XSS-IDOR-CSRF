@@ -6,9 +6,10 @@ export default function CommentairesPage() {
       <h1>Commentaires</h1>
 
       {comments.map((c) => (
-        <div key={c.id}>
+        <div key={c.id} style={{ marginBottom: 12 }}>
           <b>{c.author} :</b>{" "}
-          <span dangerouslySetInnerHTML={{ __html: c.html }} />
+          {/* ✅ Sécurisé : Le contenu est affiché comme du texte brut échappé */}
+          <span>{c.html}</span>
         </div>
       ))}
     </main>

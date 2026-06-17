@@ -9,11 +9,8 @@ export default async function RecherchePage({
     <main style={{ padding: 24 }}>
       <h1>Recherche</h1>
 
-      <p
-        dangerouslySetInnerHTML={{
-          __html: `Résultats pour : ${q}`,
-        }}
-      />
+      {/* ✅ Sécurisé : React échappe automatiquement la variable {q} contre le XSS */}
+      <p>Résultats pour : {q}</p>
     </main>
   );
 }

@@ -7,17 +7,9 @@ export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams.get("q") ?? "";
   const db = getDb();
 
-  const sql = `SELECT id, nom, prix FROM produits WHERE nom LIKE '%${q}%'`;
+  // ✅ le texte de recherche est passé comme DONNÉE (paramètre ?), jamais collé dans le SQL
+  const motif = `%${q}%`;
+  const rows = db("SELECT id, nom, prix FROM produits WHERE nom LIKE ?", [motif]);
 
-  console.log("🔎 SQL exécuté :", sql);
-
-  try {
-    const rows = db(sql);
-    return NextResponse.json({ resultats: rows });
-  } catch (e) {
-    return NextResponse.json(
-      { error: String(e) },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json({ resultats: rows });
 }
