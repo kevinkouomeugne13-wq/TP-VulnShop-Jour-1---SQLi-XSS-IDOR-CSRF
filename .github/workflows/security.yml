@@ -1,4 +1,4 @@
-k# .github/workflows/security.yml
+# .github/workflows/security.yml
 # Pipeline de sécurité : tourne à chaque push et chaque pull request.
 # Si une étape échoue (code de sortie ≠ 0), le job devient ROUGE et bloque le merge.
 name: Sécurité
