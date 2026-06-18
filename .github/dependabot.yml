@@ -1,13 +1,15 @@
+# .github/dependabot.yml
+# Dependabot surveille nos dépendances et ouvre une PR quand une MAJ existe.
 version: 2
 updates:
-  # 1) Surveillance des paquets npm
+  # 1) les paquets npm de l'app
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
 
-  # 2) Surveillance des actions GitHub (ex: actions/checkout)
+  # 2) les actions du pipeline (ex: actions/checkout) — elles aussi se mettent à jour
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
