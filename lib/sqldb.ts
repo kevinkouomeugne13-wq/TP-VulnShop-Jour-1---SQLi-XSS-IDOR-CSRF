@@ -14,6 +14,8 @@ export function getDb() {
 
 // ✅ mots de passe HACHÉS (bcrypt)
 
+// nosemgrep: generic.secrets.security.detected-bcrypt-hash.detected-bcrypt-hash
+
 alasql("INSERT INTO users VALUES (1,'alice@vulnshop.test','$2b$10$ea./ASbj4qEnFWQPTaclWOb8tuDt9vsb86rbW/vfgA3nH2CYfWQYG','user')");
 alasql("INSERT INTO users VALUES (2,'bob@vulnshop.test','$2b$10$mbsb2WdadK6chM6mcaQzNOaHPd/bHewlvatdSnRMchC/gUrbJe6r6','user')");
 alasql("INSERT INTO users VALUES (3,'admin@vulnshop.test','$2b$10$gyh3HcveSyqodxP6qTfNUuKI4xIAw4vE0qs81CnUh8VDtU7aG/L.6','admin')");

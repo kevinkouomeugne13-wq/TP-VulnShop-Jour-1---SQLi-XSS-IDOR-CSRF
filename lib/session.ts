@@ -1,8 +1,6 @@
 import crypto from "crypto";
 
-// Une clé secrète robuste (Dans un vrai projet, elle viendrait de process.env.SESSION_SECRET)
-const SECRET_KEY = "vulnshop_super_secret_key_dont_leak_it_123!";
-
+const SECRET_KEY = process.env.SESSION_SECRET || "une_cle_secrete_temporaire_de_dev_32_caracteres_minimum";
 /**
  * Signe un identifiant utilisateur pour créer un token sécurisé
  */
