@@ -1,14 +1,6 @@
 rules:
-  - id: vulnshop-sql-injection-template-string
+  - id: detect-raw-sql-concatenation
+    pattern: db("SELECT ... " + ...)
+    message: "🚨 Danger : Concaténation détectée dans une requête SQL ! Utilisez des requêtes paramétrées pour éviter les injections SQL."
     languages: [typescript, javascript]
     severity: ERROR
-    message: >
-      Injection SQL probable : une variable est interpolée dans une chaîne de caractères 
-      contenant un mot-clé SQL (SELECT, INSERT, UPDATE, DELETE).
-      Utilise une requête PARAMÉTRÉE : db("... WHERE x = ?", [valeur]).
-    metadata:
-      cwe: "CWE-89: SQL Injection"
-      owasp: "A03:2021 - Injection"
-    patterns:
-      - pattern-regex: '`[^`]*\$\{[^}]+\}[^`]*`'
-      - pattern-regex: '(?i)(select|insert|update|delete)\s'

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   const { email, password } = parsed.data;
   const db = getDb();
 
-  const rows = db("SELECT * FROM users WHERE email = ?", [email]) as Array<any>;
+  const rows = db("SELECT * FROM users WHERE email = ?", [email]) as Array<unknown>;;
   const user = rows[0];
 
   const motDePasseOk = user ? await bcrypt.compare(password, user.password) : false;

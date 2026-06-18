@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   }
 
   const db = getDb();
-  const rows = db("SELECT id, email, role FROM users WHERE id = ?", [userId]) as Array<any>;
+  const rows = db("SELECT id, email, role FROM users WHERE id = ?", [userId]) as Array<unknown>;
 
   if (rows.length === 0) {
     return NextResponse.json({ error: "Utilisateur introuvable." }, { status: 404 });

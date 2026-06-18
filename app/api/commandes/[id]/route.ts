@@ -29,7 +29,7 @@ export async function GET(
   try {
     db("CREATE TABLE IF NOT EXISTS commandes (id INT, user_id INT, produit VARCHAR(255), prix FLOAT)");
 
-    const check = db("SELECT * FROM commandes") as Array<any>;
+   const check = db("SELECT * FROM commandes") as Array<unknown>;
     if (!check || check.length === 0) {
       db("INSERT INTO commandes VALUES (1, 1, 'Clavier Mecanique Cyber', 89.99)");
       db("INSERT INTO commandes VALUES (2, 2, 'Souris de Bob', 45.00)");
@@ -46,7 +46,7 @@ export async function GET(
     const commandes = db(
       "SELECT * FROM commandes WHERE id = $commandeId AND user_id = $userId",
       { commandeId, userId }
-    ) as Array<any>;
+    ) as Array<unknown>;
 
     if (!commandes || commandes.length === 0) {
       return NextResponse.json({ error: "Commande introuvable" }, { status: 404 });
